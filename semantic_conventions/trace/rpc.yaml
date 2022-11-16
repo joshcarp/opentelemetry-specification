@@ -14,6 +14,9 @@ groups:
             - id: grpc
               value: 'grpc'
               brief: 'gRPC'
+            - id: grpc_web
+              value: 'grpc_web'
+              brief: 'gRPC Web'
             - id: java_rmi
               value: 'java_rmi'
               brief: 'Java RMI'
@@ -153,6 +156,12 @@ groups:
               value: 16
         requirement_level: required
         brief: "The [numeric status code](https://github.com/grpc/grpc/blob/v1.33.2/doc/statuscodes.md) of the gRPC request."
+
+  - id: rpc.grpc_web
+    prefix: rpc.grpc_web
+    type: span
+    extends: rpc.grpc_web
+    brief: 'Tech-specific attributes for gRPC Web.'
 
   - id: rpc.jsonrpc
     prefix: rpc.jsonrpc
