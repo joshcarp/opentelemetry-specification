@@ -214,6 +214,63 @@ The [Span Status](../api.md#set-status) MUST be left unset for an `OK` gRPC stat
 **[1]:** Instrumentations SHOULD require an explicit configuration of which metadata values are to be captured.
 Including all request/response metadata values can be a security risk - explicit configuration helps avoid leaking sensitive information.
 
+## Connect RPC conventions
+
+For remote procedure calls via [connect](http://connect.build), additional conventions are described in this section.
+
+`rpc.system` MUST be set to `"buf_connect"`.
+
+### Connect RPC Attributes
+
+Below is a table of attributes that SHOULD be included on client and server RPC measurements when `rpc.system` is `"buf_connect"`.
+
+If `rpc.buf_connect.error_code` is set, span status MUST be set to `Error` and left unset in all other cases.
+
+<!-- semconv rpc.buf_connect -->
+| Attribute  | Type | Description  | Examples  | Requirement Level |
+|---|---|---|---|---|
+| `rpc.buf_connect.error_code` | string | The [error codes] of the Connect request. | `cancelled` | Conditionally Required: [1] |
+
+**[1]:** If response is not successful and if error code available.
+
+`rpc.buf_connect.error_code` MUST be one of the following:
+
+| Value  | Description |
+|---|---|
+| `cancelled` | cancelled |
+| `unknown` | unknown |
+| `invalid_argument` | invalid_argument |
+| `deadline_exceeded` | deadline_exceeded |
+| `not_found` | not_found |
+| `already_exists` | already_exists |
+| `permission_denied` | permission_denied |
+| `resource_exhausted` | resource_exhausted |
+| `failed_precondition` | failed_precondition |
+| `aborted` | aborted |
+| `out_of_range` | out_of_range |
+| `unimplemented` | unimplemented |
+| `internal` | internal |
+| `unavailable` | unavailable |
+| `data_loss` | data_loss |
+| `unauthenticated` | unauthenticated |
+<!-- endsemconv -->
+
+### Connect RPC Status
+
+The [Span Status](../api.md#set-status) MUST be set to `Error` for any connect error code, and left unset for all others.
+
+### Connect RPC Request and Response Metadata
+
+| Attribute                                 | Type     | Description                                                                                                                                                             | Examples                                                                   | Requirement Level |
+|-------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|-------------------|
+| `rpc.buf_connect.request.metadata.<key>`  | string[] | Connect request metadata, `<key>` being the normalized Connect Metadata key (lowercase, with `-` characters replaced by `_`), the value being the metadata values. [1]  | `rpc.request.metadata.my_custom_metadata_attribute=["1.2.3.4", "1.2.3.5"]` | Optional          |
+| `rpc.buf_connect.response.metadata.<key>` | string[] | Connect response metadata, `<key>` being the normalized Connect Metadata key (lowercase, with `-` characters replaced by `_`), the value being the metadata values. [1] | `rpc.response.metadata.my_custom_metadata_attribute=["attribute_value"]`   | Optional          |
+
+**[1]:** Instrumentations SHOULD require an explicit configuration of which metadata values are to be captured.
+Including all request/response metadata values can be a security risk - explicit configuration helps avoid leaking sensitive information.
+
+[error codes]: (https://connect.build/docs/protocol/#error-codes)
+
 ## JSON RPC
 
 Conventions specific to [JSON RPC](https://www.jsonrpc.org/).

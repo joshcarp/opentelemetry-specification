@@ -160,13 +160,13 @@ Below is a table of attributes that SHOULD be included on client and server RPC 
 
 [gRPC]: https://grpc.io/
 
-## Connect conventions
+## Connect RPC conventions
 
 For remote procedure calls via [connect](http://connect.build), additional conventions are described in this section.
 
 `rpc.system` MUST be set to `"buf_connect"`.
 
-### Connect Attributes
+### Connect RPC Attributes
 
 Below is a table of attributes that SHOULD be included on client and server RPC measurements when `rpc.system` is `"buf_connect"`.
 
